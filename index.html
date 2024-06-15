@@ -116,71 +116,16 @@
 <div class="container">
   <h1>Key Generator</h1> <!-- Updated heading text -->
   <div class="input-container">
-    <label for="duration">Enter Duration:</label>
-    <input type="text" id="duration" placeholder="e.g., 5D or 1M or 1Y">
+    <label for="key">Your Key:</label>
+    <input type="text" id="key" readonly>
     <button onclick="generateKey()">Generate Key</button>
-  </div>
-  <div class="key-output" id="keyOutput">
-    <!-- Key will be displayed here -->
   </div>
 </div>
 
 <script>
 function generateKey() {
-  let durationInput = document.getElementById('duration').value.trim().toUpperCase();
-  let keyOutput = document.getElementById('keyOutput');
-  let key = '';
-
-  if (durationInput.endsWith('D')) {
-    let days = parseInt(durationInput);
-    if (!isNaN(days)) {
-      key = generateKeyForDays(days);
-    } else {
-      key = 'Invalid input for days.';
-    }
-  } else if (durationInput.endsWith('M')) {
-    let months = parseInt(durationInput);
-    if (!isNaN(months)) {
-      key = generateKeyForMonths(months);
-    } else {
-      key = 'Invalid input for months.';
-    }
-  } else if (durationInput.endsWith('Y')) {
-    let years = parseInt(durationInput);
-    if (!isNaN(years)) {
-      key = generateKeyForYears(years);
-    } else {
-      key = 'Invalid input for years.';
-    }
-  } else {
-    key = 'Invalid input format. Please use format like "5D" or "1M" or "1Y".';
-  }
-
-  keyOutput.innerHTML = `<p>${key}</p>`;
-}
-
-function generateKeyForDays(days) {
   let key = generateRandomKey();
-  let currentDate = new Date();
-  let expirationDate = new Date(currentDate.getTime() + days * 24 * 60 * 60 * 1000);
-  let formattedExpiration = expirationDate.toLocaleDateString();
-  return `Your ${days} day key: <strong>${key}</strong>. It will expire on ${formattedExpiration}.`;
-}
-
-function generateKeyForMonths(months) {
-  let key = generateRandomKey();
-  let currentDate = new Date();
-  let expirationDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + months, currentDate.getDate());
-  let formattedExpiration = expirationDate.toLocaleDateString();
-  return `Your ${months} month key: <strong>${key}</strong>. It will expire on ${formattedExpiration}.`;
-}
-
-function generateKeyForYears(years) {
-  let key = generateRandomKey();
-  let currentDate = new Date();
-  let expirationDate = new Date(currentDate.getFullYear() + years, currentDate.getMonth(), currentDate.getDate());
-  let formattedExpiration = expirationDate.toLocaleDateString();
-  return `Your ${years} year key: <strong>${key}</strong>. It will expire on ${formattedExpiration}.`;
+  document.getElementById('key').value = key;
 }
 
 function generateRandomKey() {
