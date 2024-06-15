@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Key Generator</title>
+<style>
+  body {
+    background-color: #222222;
+    color: #ddd;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden; /* Prevents horizontal scrollbar */
+  }
+  .container {
+    width: 90%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #383838; /* Dark gray for container */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    animation: slideInUp 0.5s ease-out; /* Animation for entrance */
+  }
+  @keyframes slideInUp {
+    from {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  h1 {
+    margin-bottom: 20px;
+    color: #ff4d4d; /* Red color for the heading */
+    font-weight: 400;
+    font-size: 24px;
+  }
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease-out; /* Animation for entrance */
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .input-container label {
+    color: #ddd;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .input-container input[type="text"] {
+    width: 100%;
+    max-width: 200px;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ff4d4d; /* Red outline color */
+    border-radius: 4px;
+    background-color: #383838; /* Dark gray for input background */
+    color: #ddd;
+    text-align: center;
+    margin-bottom: 10px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .input-container input[type="text"]:focus {
+    outline: none;
+    border-color: #ff4d4d; /* Red outline color on focus */
+    box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.3); /* Red box-shadow on focus */
+  }
+  .input-container button {
+    padding: 12px 24px;
+    background-color: #171717; /* Darker gray for button */
+    color: #ddd;
+    border: 2px solid #ff4d4d; /* Red border for button */
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    margin-top: 10px;
+  }
+  .input-container button:hover {
+    background-color: #2d2d2d; /* Slightly lighter gray on hover */
+  }
+  .key-output {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #383838; /* Dark gray for output background */
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: left;
+    line-height: 1.6;
+    color: #ddd;
+    animation: fadeIn 0.5s ease-out; /* Animation for entrance */
+  }
+  .key-output p {
+    margin: 10px 0;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Key Generator</h1> <!-- Updated heading text -->
+  <div class="input-container">
+    <label for="duration">Enter Duration:</label>
+    <input type="text" id="duration" placeholder="e.g., 5D or 1M or 1Y">
+    <button onclick="generateKey()">Generate Key</button>
+  </div>
+  <div class="key-output" id="keyOutput">
+    <!-- Key will be displayed here -->
+  </div>
+</div>
+
+<script>
+function generateKey() {
+  let durationInput = document.getElementById('duration').value.trim().toUpperCase();
+  let keyOutput = document.getElementById('keyOutput');
+  let key = '';
+
+  if (durationInput.endsWith('D')) {
+    let days = parseInt(durationInput);
+    if (!isNaN(days)) {
+      key = generateKeyForDays(days);
+    } else {
+      key = 'Invalid input for days.';
+    }
+  } else if (durationInput.endsWith('M')) {
+    let months = parseInt(durationInput);
+    if (!isNaN(months)) {
+      key = generateKeyForMonths(months);
+    } else {
+      key = 'Invalid input for months.';
+    }
+  } else if (durationInput.endsWith('Y')) {
+    let years = parseInt(durationInput);
+    if (!isNaN(years)) {
+      key = generateKeyForYears(years);
+    } else {
+      key = 'Invalid input for years.';
+    }
+  } else {
+    key = 'Invalid input format. Please use format like "5D" or "1M" or "1Y".';
+  }
+
+  keyOutput.innerHTML = `<p>${key}</p>`;
+}
+
+function generateKeyForDays(days) {
+  let key = generateRandomKey();
+  let currentDate = new Date();
+  let expirationDate = new Date(currentDate.getTime() + days * 24 * 60 * 60 * 1000);
+  let formattedExpiration = expirationDate.toLocaleDateString();
+  return `Your ${days} day key: <strong>${key}</strong>. It will expire on ${formattedExpiration}.`;
+}
+
+function generateKeyForMonths(months) {
+  let key = generateRandomKey();
+  let currentDate = new Date();
+  let expirationDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + months, currentDate.getDate());
+  let formattedExpiration = expirationDate.toLocaleDateString();
+  return `Your ${months} month key: <strong>${key}</strong>. It will expire on ${formattedExpiration}.`;
+}
+
+function generateKeyForYears(years) {
+  let key = generateRandomKey();
+  let currentDate = new Date();
+  let expirationDate = new Date(currentDate.getFullYear() + years, currentDate.getMonth(), currentDate.getDate());
+  let formattedExpiration = expirationDate.toLocaleDateString();
+  return `Your ${years} year key: <strong>${key}</strong>. It will expire on ${formattedExpiration}.`;
+}
+
+function generateRandomKey() {
+  let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let key = '';
+  for (let i = 0; i < 10; i++) {
+    key += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return key;
+}
+</script>
+
+</body>
+</html>
